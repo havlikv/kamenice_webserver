@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+	    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+	    >
+
+
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="cz.manix.voting.domain" />
+		<property name="jpaProperties">
+			<props>
+			<!-- 
+				<prop key="javax.persistence.schema-generation.scripts.action">create</prop>
+				<prop key="javax.persistence.schema-generation.scripts.create-target">/tmp/create.ddl</prop>
+			-->
+				<prop key="hibernate.hbm2ddl.import_files">/data.sql</prop>
+
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">true</prop>
+
+			</props>
+		</property>
+	</bean>
+
+
+
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maximumPoolSize" value="10" />
+		<property name="connectionTimeout" value="4000" />
+	</bean>
+
+
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	
+
+
+	<context:component-scan base-package="cz.manix.voting.web" />
+
+	<bean id="objectMapper" class="cz.manix.voting.web.NoFailObjectMapper" />
+
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper" ref="objectMapper" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+
+
+	<tx:annotation-driven  />
+	
+	
+	
+</beans>
