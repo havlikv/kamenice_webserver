@@ -42,7 +42,7 @@ public class webControllerTest
 		survey.setFromTimestamp(now);
 		survey.setUntilTimestamp(now);
 
-		String id = controller.createSurvey(survey);
+		Integer id = controller.createSurvey(survey);
 
 		Survey survey2 = em.find(Survey.class, Integer.valueOf(id));
 

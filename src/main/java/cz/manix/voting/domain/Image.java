@@ -2,12 +2,16 @@ package cz.manix.voting.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -16,7 +20,9 @@ public class Image
 	public final int SIZE = 2000000;
 
 	private Integer id;
-	private byte[] image;
+	private byte[] xblob;
+	private Option option;
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +42,33 @@ public class Image
 
 	@Lob
 	@Column(length = SIZE)
-	public byte[] getImage()
+	@Basic(fetch = FetchType.LAZY)
+	public byte[] getXBlob()
 	{
-		return image;
+		return xblob;
 	}
 
 
 
-	public void setImage(byte[] image)
+	public void setXBlob(byte[] xblob)
 	{
-		this.image = image;
+		this.xblob = xblob;
+	}
+
+
+
+	@ManyToOne
+	@JoinColumn(name = "option_id")
+	public Option getOption()
+	{
+		return option;
+	}
+
+
+
+	public void setOption(Option option)
+	{
+		this.option = option;
 	}
 
 }
