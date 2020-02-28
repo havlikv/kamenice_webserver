@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Access(AccessType.PROPERTY)
 public class Option
@@ -73,6 +75,7 @@ public class Option
 
 	@ManyToOne
 	@JoinColumn(name = "survey_id")
+	@JsonIgnore
 	public Survey getSurvey()
 	{
 		return survey;
