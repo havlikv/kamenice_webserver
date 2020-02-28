@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true" xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p [%.40t] %C:%L - %m%n" />
+		</layout>
+	</appender>
+
+
+	<appender name="logFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="append" value="false" />
+		<param name="maxFileSize" value="1000000" />
+		<param name="maxBackupIndex" value="3" />
+		<param name="file" value="/tmp/webserver/webserver.log" />
+		<param name="Threshold" value="INFO"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p [%.40t] %C:%L - %m%n" />
+		</layout>
+	</appender>
+
+
+<!-- 
+
+	<logger name="org.hibernate.SQL" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="console" />
+	</logger>
+
+
+
+	<logger name="org.hibernate.type.descriptor.sql" additivity="false">
+		<level value="trace" />
+		<appender-ref ref="console" />
+	</logger>
+
+
+
+	<logger name="org.hibernate.stat" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="console" />
+	</logger>
+
+ -->
+
+
+	<root>
+		<level value="info" />
+		<appender-ref ref="console" />
+		<appender-ref ref="logFile" />
+	</root>
+</log4j:configuration>

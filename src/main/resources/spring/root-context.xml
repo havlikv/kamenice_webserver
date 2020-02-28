@@ -57,24 +57,5 @@
 	</bean>
 	
 
-
-	<context:component-scan base-package="cz.manix.voting.web" />
-
-	<bean id="objectMapper" class="cz.manix.voting.web.NoFailObjectMapper" />
-
-
-	<mvc:annotation-driven>
-		<mvc:message-converters>
-			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-				<property name="objectMapper" ref="objectMapper" />
-			</bean>
-		</mvc:message-converters>
-	</mvc:annotation-driven>
-
-
-
-	<tx:annotation-driven  />
-	
-	
 	
 </beans>

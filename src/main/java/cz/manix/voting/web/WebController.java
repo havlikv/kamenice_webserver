@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -25,6 +26,7 @@ import cz.manix.voting.domain.Image_;
 import cz.manix.voting.domain.Option;
 import cz.manix.voting.domain.Option_;
 import cz.manix.voting.domain.Survey;
+import cz.manix.voting.domain.Survey_;
 
 @RestController
 @RequestMapping("/")
@@ -36,7 +38,7 @@ public class WebController
 
 
 
-	@RequestMapping(path = "survey", method = RequestMethod.POST)
+	@RequestMapping(path = "/survey", method = RequestMethod.POST)
 	public Integer createSurvey(@RequestBody Survey survey)
 	{
 		em.persist(survey);
@@ -46,21 +48,21 @@ public class WebController
 
 
 
-	@RequestMapping(path = "survey", method = RequestMethod.PUT)
-	public Integer updateSurvey(@RequestBody Survey survey)
+	@RequestMapping(path = "/survey", method = RequestMethod.PUT)
+	public void updateSurvey(@RequestBody Survey survey)
 	{
 		em.merge(survey);
-
-		return survey.getId();
 	}
 
 
 
-	@RequestMapping(path = { "/survey" }, method = RequestMethod.GET)
+	@RequestMapping(path = "/survey", method = RequestMethod.GET)
 	public List<Survey> readSurveys()
 	{
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Survey> criteriaQuery = cb.createQuery(Survey.class);
+		Root<Survey> root = criteriaQuery.from(Survey.class);
+		criteriaQuery.select(root);
 
 		TypedQuery<Survey> typedQuery = em.createQuery(criteriaQuery);
 		List<Survey> surveys = typedQuery.getResultList();
@@ -87,6 +89,52 @@ public class WebController
 
 
 
+	@RequestMapping(path = { "/has_surveys" }, method = RequestMethod.GET)
+	public boolean hasSurveys()
+	{
+		String jpql = "select count(survey) from Survey survey";
+
+		Query query = em.createQuery(jpql);
+
+		Long count = (Long) query.getResultList().get(0);
+
+		return count > 0;
+	}
+
+
+
+	@RequestMapping(path = { "/survey_by_id" }, method = RequestMethod.GET)
+	public Survey getSurveyById(@RequestParam(name = "id") Integer id)
+	{
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Survey> criteriaQuery = cb.createQuery(Survey.class);
+		Root<Survey> root = criteriaQuery.from(Survey.class);
+		criteriaQuery.select(root).where(cb.equal(root.get(Survey_.ID), id));
+
+		TypedQuery<Survey> typedQuery = em.createQuery(criteriaQuery);
+		List<Survey> surveys = typedQuery.getResultList();
+
+		if (surveys.size() == 0)
+		{
+			return null;
+		}
+
+		Survey survey = surveys.get(0);
+
+		List<Option> options = readOptions(id);
+		survey.setOptions(options);
+
+		for (Option option : options)
+		{
+			List<Integer> imagesIds = readImagesIds(option.getId());
+			option.setImagesIds(imagesIds);
+		}
+
+		return survey;
+	}
+
+
+
 	@RequestMapping(path = "/option", method = RequestMethod.POST)
 	public Integer createOption(@RequestParam(name = "survey_id") int surveyId, @RequestBody Option option)
 	{
@@ -100,11 +148,9 @@ public class WebController
 
 
 	@RequestMapping(path = "/option", method = RequestMethod.PUT)
-	public Integer updateOption(@RequestBody Option option)
+	public void updateOption(@RequestBody Option option)
 	{
 		em.merge(option);
-
-		return option.getId();
 	}
 
 

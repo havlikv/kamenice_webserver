@@ -1,5 +1,7 @@
 package cz.manix.voting.domain;
 
+import java.util.List;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -18,6 +21,8 @@ public class Option
 	private String name;
 	private String description;
 	private Survey survey;
+
+	private List<Integer> imagesIds;
 
 
 	@Id
@@ -78,5 +83,20 @@ public class Option
 	public void setSurvey(Survey survey)
 	{
 		this.survey = survey;
+	}
+
+
+
+	@Transient
+	public List<Integer> getImagesIds()
+	{
+		return imagesIds;
+	}
+
+
+
+	public void setImagesIds(List<Integer> imagesIds)
+	{
+		this.imagesIds = imagesIds;
 	}
 }
