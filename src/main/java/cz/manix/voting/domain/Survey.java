@@ -1,7 +1,6 @@
 package cz.manix.voting.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -24,7 +22,6 @@ public class Survey
 	private Date fromTimestamp;
 	private Date untilTimestamp;
 
-	private List<Option> options;
 
 
 	@Id
@@ -101,20 +98,5 @@ public class Survey
 	public void setUntilTimestamp(Date untilTimestamp)
 	{
 		this.untilTimestamp = untilTimestamp;
-	}
-
-
-
-	@Transient
-	public List<Option> getOptions()
-	{
-		return options;
-	}
-
-
-
-	public void setOptions(List<Option> options)
-	{
-		this.options = options;
 	}
 }

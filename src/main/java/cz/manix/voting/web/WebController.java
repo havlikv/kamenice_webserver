@@ -116,21 +116,10 @@ public class WebController
 
 		if (surveys.size() == 0)
 		{
-			return null;
+			throw new RuntimeException(String.format("No such survey '&d'.", id));
 		}
 
-		Survey survey = surveys.get(0);
-
-		List<Option> options = readOptions(id);
-		survey.setOptions(options);
-
-		for (Option option : options)
-		{
-			List<Integer> imagesIds = readImagesIds(option.getId());
-			option.setImagesIds(imagesIds);
-		}
-
-		return survey;
+		return surveys.get(0);
 	}
 
 
@@ -148,8 +137,11 @@ public class WebController
 
 
 	@RequestMapping(path = "/option", method = RequestMethod.PUT)
-	public void updateOption(@RequestBody Option option)
+	public void updateOption(@RequestParam(name = "survey_id") Integer surveyId, @RequestBody Option option)
 	{
+		Survey survey = em.find(Survey.class, surveyId);
+		option.setSurvey(survey);
+
 		em.merge(option);
 	}
 

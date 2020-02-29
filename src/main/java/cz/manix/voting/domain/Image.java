@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Access(AccessType.PROPERTY)
 public class Image
@@ -59,6 +61,7 @@ public class Image
 
 	@ManyToOne
 	@JoinColumn(name = "option_id")
+	@JsonIgnore
 	public Option getOption()
 	{
 		return option;
