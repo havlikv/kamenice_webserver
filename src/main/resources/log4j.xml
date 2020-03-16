@@ -21,7 +21,7 @@
 	</appender>
 
 
-
+<!-- 
 	<logger name="org.hibernate.SQL" additivity="false">
 		<level value="debug" />
 		<appender-ref ref="console" />
@@ -40,7 +40,7 @@
 		<level value="debug" />
 		<appender-ref ref="console" />
 	</logger>
-
+ -->
 
 
 	<root>

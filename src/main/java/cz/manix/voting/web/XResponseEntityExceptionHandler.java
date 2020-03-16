@@ -36,6 +36,8 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 			Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request)
 	{
 
+		logger.error("Error.", ex);
+
 		if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status))
 		{
 			request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);

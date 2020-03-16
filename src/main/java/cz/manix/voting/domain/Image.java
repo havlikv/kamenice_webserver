@@ -23,6 +23,7 @@ public class Image
 
 	private Integer id;
 	private byte[] xblob;
+	private String contentType;
 	private Option option;
 
 
@@ -55,6 +56,21 @@ public class Image
 	public void setXBlob(byte[] xblob)
 	{
 		this.xblob = xblob;
+	}
+
+
+
+	@JsonIgnore
+	public String getContentType()
+	{
+		return contentType;
+	}
+
+
+
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
 	}
 
 
