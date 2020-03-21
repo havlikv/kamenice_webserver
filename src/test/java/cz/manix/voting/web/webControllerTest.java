@@ -19,7 +19,7 @@ import cz.manix.voting.domain.Survey;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/root-context.xml" })
+@ContextConfiguration(locations = { "classpath:spring/root-context.xml", "classpath:spring/dispatcherservlet-context.xml" })
 public class webControllerTest
 {
 	@Autowired

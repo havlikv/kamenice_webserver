@@ -24,6 +24,7 @@ public class Image
 	private Integer id;
 	private byte[] xblob;
 	private String contentType;
+	private int seq;
 	private Option option;
 
 
@@ -71,6 +72,20 @@ public class Image
 	public void setContentType(String contentType)
 	{
 		this.contentType = contentType;
+	}
+
+
+
+	public int getSeq()
+	{
+		return seq;
+	}
+
+
+
+	public void setSeq(int seq)
+	{
+		this.seq = seq;
 	}
 
 

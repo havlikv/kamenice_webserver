@@ -169,7 +169,7 @@ public class WebController
 
 
 	@RequestMapping(path = "/option", method = RequestMethod.DELETE)
-	public void deleteOption(Integer id)
+	public void deleteOption(@RequestParam(name = "id") int id)
 	{
 
 		Query deleteImagesQry = em.createQuery("delete from Image image where image.option.id = :id");
@@ -187,13 +187,16 @@ public class WebController
 
 
 	@RequestMapping(path = "/image", method = RequestMethod.POST)
-	public Integer createImage(@RequestParam("blob") MultipartFile blob, @RequestParam(name = "option_id") Integer optionId) throws IOException
+	public Integer createImage(@RequestParam("blob") MultipartFile blob,
+			@RequestParam(name = "option_id") int optionId,
+			@RequestParam(name = "seq") int seq) throws IOException
 	{
 		Option option = em.find(Option.class, optionId);
 
 		Image image = new Image();
 		image.setXBlob(blob.getBytes());
 		image.setOption(option);
+		image.setSeq(seq);
 		image.setContentType(blob.getContentType());
 
 		em.persist(image);
@@ -214,6 +217,28 @@ public class WebController
 
 
 
+	@RequestMapping(path = "/image", method = RequestMethod.DELETE)
+	public void deleteImage(@RequestParam(name = "id") int id) throws IOException
+	{
+		Query deleteImagesQry = em.createQuery("delete from Image image where image.id = :id");
+		deleteImagesQry.setParameter("id", id);
+		int r = deleteImagesQry.executeUpdate();
+
+		logger.info("Deleted {} images.", r);
+	}
+
+
+
+	@RequestMapping(path = "/image", method = RequestMethod.PUT)
+	public void updateImageSeq(@RequestParam(name = "id") Integer id, @RequestParam(name = "seq") Integer seq)
+	{
+		Image image = em.find(Image.class, id);
+
+		image.setSeq(seq);
+	}
+
+
+
 	@RequestMapping(path = "/images_ids", method = RequestMethod.GET)
 	public List<Integer> readImagesIds(@RequestParam(name = "option_id") Integer optionId)
 	{
@@ -222,7 +247,9 @@ public class WebController
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Integer> criteriaQuery = cb.createQuery(Integer.class);
 		Root<Image> root = criteriaQuery.from(Image.class);
-		criteriaQuery.select(root.get(Image_.ID)).where(cb.equal(root.get(Image_.OPTION), option));
+		criteriaQuery.select(root.get(Image_.ID))
+				.where(cb.equal(root.get(Image_.OPTION), option))
+				.orderBy(cb.asc(root.get(Image_.SEQ)));
 
 		TypedQuery<Integer> typedQuery = em.createQuery(criteriaQuery);
 		List<Integer> imagesIds = typedQuery.getResultList();
