@@ -9,11 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "survey_id", "name" }) })
 public class Option
 {
 	private Integer id;
@@ -38,7 +41,7 @@ public class Option
 
 
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	public String getName()
 	{
 		return name;
@@ -53,7 +56,7 @@ public class Option
 
 
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	public String getDescription()
 	{
 		return description;
