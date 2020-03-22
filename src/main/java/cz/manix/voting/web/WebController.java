@@ -65,7 +65,7 @@ public class WebController
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Survey> criteriaQuery = cb.createQuery(Survey.class);
 		Root<Survey> root = criteriaQuery.from(Survey.class);
-		criteriaQuery.select(root);
+		criteriaQuery.select(root).orderBy(cb.asc(root.get(Survey_.ID)));
 
 		TypedQuery<Survey> typedQuery = em.createQuery(criteriaQuery);
 		List<Survey> surveys = typedQuery.getResultList();
@@ -158,7 +158,8 @@ public class WebController
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Option> criteriaQuery = cb.createQuery(Option.class);
 		Root<Option> root = criteriaQuery.from(Option.class);
-		criteriaQuery.select(root).where(cb.equal(root.get(Option_.SURVEY), survey));
+		criteriaQuery.select(root).where(cb.equal(root.get(Option_.SURVEY), survey))
+				.orderBy(cb.asc(root.get(Option_.ID)));
 
 		TypedQuery<Option> typedQuery = em.createQuery(criteriaQuery);
 		List<Option> options = typedQuery.getResultList();
